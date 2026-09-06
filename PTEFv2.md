@@ -5,6 +5,10 @@
 Created and provided to the community by the team at SCYTHE.
 Please consider contributing by submitting pull requests. 
 
+> ### 2026 Update Note
+>
+> SCYTHE, the company that originated and hosted this framework, was acquired by ExtraHop in 2023. The Purple Team Exercise Framework methodology itself is vendor-neutral and remains valid and actively used industry-wide; nothing in this document depends on any single vendor's platform. However, because SCYTHE-hosted links referenced throughout this document (scythe.io, the SCYTHE Academy, and related community resources) may now be dead, redirected, or no longer maintained, readers should verify such links independently. Readers looking for actively maintained, adjacent adversary emulation resources should also check MITRE's [Center for Threat-Informed Defense](https://ctid.mitre.org/), which continues to publish open, community-driven adversary emulation plans and threat-informed defense research.
+
 # Executive Summary
 
 This document defines a **Purple Team Exercise Framework (PTEF) **to facilitate the creation of a formal **Purple Team Program**. Purple Team Exercises are an efficient method to test, measure, and improve your organization’s resilience to an attack. A Purple Team focuses on fostering collaboration with your entire security stack including people, process, and technology.
@@ -859,6 +863,46 @@ These three levels are meant to be viewed as a team to gauge overall capability,
 
 
 We used color coding to emphasize the required balance between threat and detection understanding to achieve “purple,” but there’s no wrong way to get to the top right corner of the box (what we would consider an advanced purple team). Maybe your organization has a highly skilled team who understands how to create new detections based on the latest cyber threat intelligence; they probably think of themselves as a blue team and sit in the top left corner of our box. This team needs to improve their threat understanding to build their capabilities into purple territory - enabling testing of their detections and guiding development of new ones. The first step for this team might be deploying a tool like the SCYTHE platform or Red Canary’s [Atomic Red Team Project](https://github.com/redcanaryco/atomic-red-team) with one of the public emulation plans available in SCYTHE’s public repository of [community threats on GitHub](https://github.com/scythe-io/community-threats) or MITRE Engenuity’s [Center for Threat Informed Defense (CTID) ](https://github.com/center-for-threat-informed-defense/adversary_emulation_library)plans. As they advance in their threat understanding journey, they might hire someone to refine their threat model or write new adversary techniques to keep their detections on the cutting edge. While there are many paths to purple, if you are looking for guidance on how to invest your limited resources, we would recommend prioritizing balance. Ask yourself where your team falls in the square and what you need to move closer to the purple diagonal. The ultimate goal is to create a team with advanced understanding of both threats and detections, allowing them to better defend the organization.
+
+
+# Agentic & AI-Assisted Purple Teaming (2026 Addendum)
+
+Since this framework was originally written, large language model (LLM) based agents and autonomous execution platforms have become practical tools across several phases of the PTEF methodology. This addendum does not replace the Cyber Threat Intelligence, Execution, or Preparation sections above; it describes how agentic and AI-assisted tooling can be applied within those existing phases, and what governance is required before doing so.
+
+## Accelerating CTI-to-TTP Extraction
+
+The [Extract TTPs at the Procedure Level](#extract-ttps-at-the-procedure-level) step is one of the most labor-intensive parts of the Cyber Threat Intelligence phase: analysts must read unstructured threat intelligence and incident response reporting and manually map narrative descriptions of adversary behavior to ATT&CK tactics, techniques, and procedure-level detail. LLM-driven agents are increasingly used to accelerate this step by ingesting CTI reports and producing candidate ATT&CK mappings, draft procedure-level test steps, and first-pass adversary emulation plans for human analysts to validate and refine.
+
+This use of AI is an acceleration of existing CTI tradecraft, not a replacement for it. Procedure-level accuracy matters for a Purple Team Exercise to be worthwhile (see Extract TTPs at the Procedure Level, above), and LLM output can misattribute techniques, hallucinate procedure details, or miss context that a human CTI analyst would catch. Any AI-assisted TTP extraction should be treated as a draft that a qualified Cyber Threat Intelligence analyst reviews, corrects, and approves before it is table-topped with stakeholders or handed to the Red Team for the Adversary Emulation Plan.
+
+## Autonomous Adversary Emulation Platforms
+
+A related trend is the emergence of autonomous and semi-autonomous adversary emulation platforms that can carry out some or all of the Purple Team Exercise Execution phase with reduced manual operator effort:
+
+* **MITRE Caldera** uses an agent-based execution model: lightweight agents (e.g. Sandcat) are deployed to target systems, and an operator (human or automated) directs them to execute chained "abilities" mapped to ATT&CK techniques according to an adversary profile, with Caldera handling sequencing and reporting.
+* **Prelude Operator** is an autonomous offensive security platform that can plan and execute chains of TTPs against target infrastructure with a detect-then-act execution loop, reducing the amount of hands-on-keyboard operator time needed to run a given emulation.
+* **AttackIQ Flex** extends AttackIQ's security control validation and adversary emulation capabilities with more automated test execution, intended to let smaller teams run recurring TTP validation without a fully staffed Red Team for every test.
+
+These platforms can execute the "Red Team executes the TTP" step of the Exercise Flow (see Purple Team Exercise Execution, above) with less manual operator effort, but they do not remove the need for the surrounding Purple Team process: table-top discussion, Blue Team observation and response, metrics capture, and Lessons Learned documentation are still required for the activity to constitute a Purple Team Exercise rather than an unattended scan.
+
+## AI-Native Target Surfaces: When the Target Is an LLM
+
+The tooling above still targets traditional infrastructure and endpoints — the scope PTEF was originally written for. When the target system is itself an LLM or generative AI application (a chatbot, an AI agent, a RAG pipeline, or a model API), the attack surface is fundamentally different: prompt injection, jailbreaking, training data extraction, insecure output handling, and unsafe tool/agent invocation replace many of the traditional TTPs this framework addresses. Two purpose-built, AI-native tools are relevant to CTI and Red Team stakeholders whose target organization includes such systems:
+
+* **PyRIT** (Python Risk Identification Tool), an open-source framework for automating red teaming of generative AI systems.
+* **garak**, an open-source LLM vulnerability scanner that probes generative AI systems for weaknesses such as prompt injection, data leakage, jailbreaks, and hallucination.
+
+Cyber Threat Intelligence and Red Team stakeholders should treat AI/LLM application testing as a distinct target category requiring its own threat model, tooling, and expertise under Understand the Target Organization and Identify the Adversary to Emulate (see Cyber Threat Intelligence, above), rather than assuming traditional infrastructure TTPs and tooling transfer directly.
+
+## Governance: Agentic Tooling Does Not Get a Pass on Authorization
+
+None of the tooling described in this addendum changes the authorization discipline PTEF already requires during the Preparation phase and its Planning Meetings (see Preparation, above). Any agentic, autonomous, or AI-assisted tool that is granted real execution capability against target systems — whether it drafts TTPs, autonomously chains and executes techniques, or probes a generative AI application — must be brought under the same Rules of Engagement discipline as a human Red Team operator, at minimum:
+
+* **Authorization scoping.** The same approved goals, target systems, and adversary emulation plan that gate a human operator's actions (see Target Systems and Create an Adversary Emulation Plan, above) must explicitly cover what an agentic tool is permitted to do. Autonomy does not imply standing authorization to act outside the approved scope.
+* **Blast-radius limits.** Autonomous execution platforms should be constrained (via allowlisted targets, sandboxed or non-production systems where appropriate, rate limiting, and kill-switch mechanisms) so that an agent's mistake, misinterpretation of an objective, or unexpected chaining of techniques cannot produce impact beyond what was authorized for the exercise.
+* **Human-approval checkpoints.** Just as the Exercise Flow requires the Red Team to share screen, provide attacker IP, target, and exact time before and during execution (see Exercise Flow, above), an agentic tool with execution capability should have defined checkpoints — before execution, at each significant escalation, or before any action outside a pre-approved playbook — where a human operator or Exercise Coordinator reviews and approves the next step rather than letting the agent proceed unattended.
+
+In short: an agentic or autonomous tool is a force multiplier for the Red Team and CTI functions described in this framework, not a separate category exempt from PTEF's existing planning, scoping, and approval discipline. Sponsors, Exercise Coordinators, and Red Team leads should apply the same rigor to authorizing an agentic tool's capabilities as they would to authorizing a human operator's.
 
 
 # Templates
