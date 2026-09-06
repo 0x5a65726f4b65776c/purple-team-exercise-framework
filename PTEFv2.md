@@ -7,7 +7,7 @@ Please consider contributing by submitting pull requests.
 
 > ### 2026 Update Note
 >
-> SCYTHE, the company that originated and hosted this framework, was acquired by ExtraHop in 2023. The Purple Team Exercise Framework methodology itself is vendor-neutral and remains valid and actively used industry-wide; nothing in this document depends on any single vendor's platform. However, because SCYTHE-hosted links referenced throughout this document (scythe.io, the SCYTHE Academy, and related community resources) may now be dead, redirected, or no longer maintained, readers should verify such links independently. Readers looking for actively maintained, adjacent adversary emulation resources should also check MITRE's [Center for Threat-Informed Defense](https://ctid.mitre.org/), which continues to publish open, community-driven adversary emulation plans and threat-informed defense research.
+> SCYTHE remains an independently operated company (Bryson Bort continues as founder and CEO as of this update). The Purple Team Exercise Framework methodology itself is vendor-neutral and remains valid and actively used industry-wide regardless of any single vendor's status; nothing in this document depends on any one platform. That said, links referenced throughout this document age like any external URL — readers should verify scythe.io, SCYTHE Academy, and related community-resource links independently before relying on them. Readers looking for actively maintained, adjacent adversary emulation resources should also check MITRE's [Center for Threat-Informed Defense](https://ctid.mitre.org/), which continues to publish open, community-driven adversary emulation plans and threat-informed defense research.
 
 # Executive Summary
 
